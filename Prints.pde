@@ -30,3 +30,26 @@ void printcurright(Node cur) {
   store.rec = new rect_class(1, (int) (cur.rec.x+playarea_x), (int) (cur.rec.y+playarea_y), cur.right.rec.w, cur.right.rec.h);
   printstack.push(store);
 }
+
+void printprintstack(colour c){
+ for(int i = 0; i<printstack.size(); i++){
+   Node n = (Node) printstack.pop();
+   fill(c.r, c.g, c.b);
+   rect(n.rec.x,n.rec.y, n.rec.w, n.rec.h);
+   fill(0); 
+  textAlign(CENTER, CENTER);
+  textSize(textsize);
+  text(n.val, n.rec.x+n.rec.w/2, n.rec.y+n.rec.h/2);
+   
+   printstack.addLast(n);
+ }
+}
+
+void reprintpolishafterchange() { // this is used to print result to the screen and refresh costs
+  reprintflag = true; // this sets up the add function to keep the sizes from the last tree
+  newtree.add(result.toCharArray()); //calls this with printstack set to true. Which now keeps sizes from last tree
+  newtree.setsizesxy(1, 2); //TODO change these to pull from a constant location?
+  printstack.clear();
+  costx = costy =0; // need to reset the cost calcs everytime we make a new rect
+  newtree.recursiverects(newtree.head);
+}

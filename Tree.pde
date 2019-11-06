@@ -15,7 +15,8 @@ public class Tree { // these are the tree nodes for the polish expression
       if (a[i] == 'V' || a[i] == 'H') { //if it's a cut, pop the previous 2
         Node current = new Node(a[i]);
         current.right = (Node) stack.pop();
-        current.left = (Node) stack.pop();
+        current.left = (Node) stack.pop(); //TODO this is the first place we have a problem if we don't have a valid polish expression.
+        
         if (i == a.length-1) { // this is the last node and we don't want to push this, but rather set it to head
           head = current;
           return;
@@ -39,7 +40,9 @@ public class Tree { // these are the tree nodes for the polish expression
     while (!stack.isEmpty()) {
       Node tempnode = (Node) stack.pop();
       if (tempnode.val != 'V' && tempnode.val != 'H') { //only add dimensions to non-cut nodes for now. Node sizes will be based on children and calcuated later
-        tempnode.rec =  new rect_class(1, 0, 0, (int) random(1, 4)*scalingvariable, (int) random(1, 4)*scalingvariable);
+        tempnode.rec =  new rect_class(globalid, 0, 0, (int) random(1, 4)*scalingvariable, (int) random(1, 4)*scalingvariable);
+        globalid++;
+        globalrects[globalid] = tempnode.rec;
         //tempnode.rec =  new rect_class(1, 0, 0, 1*scalingvariable, 1*scalingvariable);
       } else {
         tempnode.rec =  new rect_class(1, 0, 0, 0, 0);
@@ -47,7 +50,20 @@ public class Tree { // these are the tree nodes for the polish expression
       polish.addLast(tempnode); // so polish should be filled with the correct stack now
     }
   }
-
+  
+void setsizesxy(int x, int y) {
+    stack.clear();
+    recursive(head);
+    while (!stack.isEmpty()) {
+      Node tempnode = (Node) stack.pop();
+      if (tempnode.val != 'V' && tempnode.val != 'H') { //only add dimensions to non-cut nodes for now. Node sizes will be based on children and calcuated later
+        tempnode.rec =  new rect_class(1, 0, 0, (int) x*scalingvariable, (int) y*scalingvariable);
+      } else {
+        tempnode.rec =  new rect_class(1, 0, 0, 0, 0);
+      }
+      polish.addLast(tempnode); // so polish should be filled with the correct stack now
+    }
+  }
 
   void traverseprint() { //really easy to copy for other functionality using stack (which is the polish expression)
     stack.clear();
