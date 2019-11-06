@@ -39,14 +39,15 @@ public class Tree { // these are the tree nodes for the polish expression
     while (!stack.isEmpty()) {
       Node tempnode = (Node) stack.pop();
       if (tempnode.val != 'V' && tempnode.val != 'H') { //only add dimensions to non-cut nodes for now. Node sizes will be based on children and calcuated later
-        //tempnode.rec =  new rect_class(1, 0, 0, (int) random(1, 4)*scalingvariable, (int) random(1, 4)*scalingvariable);
-        tempnode.rec =  new rect_class(1, 0, 0, 1*scalingvariable, 2*scalingvariable);
+        tempnode.rec =  new rect_class(1, 0, 0, (int) random(1, 4)*scalingvariable, (int) random(1, 4)*scalingvariable);
+        //tempnode.rec =  new rect_class(1, 0, 0, 1*scalingvariable, 1*scalingvariable);
       } else {
         tempnode.rec =  new rect_class(1, 0, 0, 0, 0);
       }
       polish.addLast(tempnode); // so polish should be filled with the correct stack now
     }
   }
+
 
   void traverseprint() { //really easy to copy for other functionality using stack (which is the polish expression)
     stack.clear();
@@ -60,6 +61,7 @@ public class Tree { // these are the tree nodes for the polish expression
     stack = polish;
   }
 
+
   void recursive(Node cur) { //this recursively pushed items from head into the stack (to be printed later)
     stack.push(cur);
     if (cur.right == null && cur.left == null) { //this is the base case for returning from leaf nodes
@@ -70,13 +72,12 @@ public class Tree { // these are the tree nodes for the polish expression
     return;
   }
 
+
   void recursiverects(Node cur) {
     fill(100, 230, 0);  
     if (cur.right == null && cur.left == null) { //this is the base case for returning from leaf nodes
       return;
     }
-
-
     if (cur.left.val == 'V' || cur.left.val == 'H') { //if we are going to the left down to a cut
       if (cur.val == 'V') { //if we are in a vertical cut, shift origin right
         cur.left.rec = cur.rec;
@@ -154,4 +155,4 @@ public class Tree { // these are the tree nodes for the polish expression
     }
     return;
   }
-}  
+}

@@ -27,3 +27,16 @@ public class Node { // these are the tree nodes for the polish expression
     rec = null;
   }
 }
+
+public class colour{
+  public int r;
+  public int g;
+  public int b;
+  colour (int ri, int gi, int bi) {
+    r = ri;
+    g = gi;
+    b = bi;
+  }
+}
+  
+  
