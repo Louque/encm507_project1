@@ -4,8 +4,8 @@
 ///
 import java.util.ArrayDeque;
 
-String s = "12H34H5HV"; //MUST be a valid polish expresion THIS IS THE CURRENT USER INPUT, update with better way later.
-int scalingvariable = 20; //ROBERT's favorite variable.
+String s = "12H34V5HH"; //MUST be a valid polish expresion THIS IS THE CURRENT USER INPUT, update with better way later.
+int scalingvariable = 20; //ROBERT's favorite variable.H34VH
 int textsize = 15;
 char[] polish;
 int sizeModifier = 50; // make this the WORST case scenario of playarea_w / (width of all boxes) which is the case with all vertical cuts OR worst case of all boxes vertically stackeda and playarea_h
@@ -147,8 +147,8 @@ public class Tree { // these are the tree nodes for the polish expression
     while (!stack.isEmpty()) {
       Node tempnode = (Node) stack.pop();
       if (tempnode.val != 'V' && tempnode.val != 'H') { //only add dimensions to non-cut nodes for now. Node sizes will be based on children and calcuated later
-        //tempnode.rec =  new rect_class(1, 0, 0, (int) random(1, 4)*scalingvariable, (int) random(1, 4)*scalingvariable);
-        tempnode.rec =  new rect_class(1, 0, 0, 1*scalingvariable, 2*scalingvariable);
+        tempnode.rec =  new rect_class(1, 0, 0, (int) random(1, 4)*scalingvariable, (int) random(1, 4)*scalingvariable);
+        //tempnode.rec =  new rect_class(1, 0, 0, 1*scalingvariable, 2*scalingvariable);
       } else {
         tempnode.rec =  new rect_class(1, 0, 0, 0, 0);
       }
@@ -185,6 +185,14 @@ public class Tree { // these are the tree nodes for the polish expression
       return;
     }
 
+
+    if (cur.left.val == 'V' || cur.left.val == 'H') { //if we are going to the left down to a cut
+      if (cur.val == 'V') { //if we are in a vertical cut, shift origin right
+        cur.left.rec = cur.rec;
+      } else if (cur.val == 'H') { //if we are in a horizontal cut, shift origin down
+        cur.left.rec = cur.rec;
+      }
+    }
     recursiverects(cur.left); // **************************************************LEFT
     if (cur.left.val != 'V' && cur.left.val != 'H') {  //****************************LEFT LEAF
       if (cur.val == 'V') { //we have a vertical cut, to stack the value just returned from at the base location of the V cut position (cut.rec. is this)
@@ -200,42 +208,57 @@ public class Tree { // these are the tree nodes for the polish expression
       }
       //need to update the size of the cut node's dimensions for using in other levels.
     } else {  // LEFT CUT
-      if (cur.val == 'V') { //if cut shift origin based on last block placed
-        cur.rec.x += cur.left.rec.x;
-      } else if (cur.val == 'H') {
-        cur.rec.y += cur.left.rec.y;
+      if (cur.left.val == 'H' && cur.val == 'V') { //if cut shift origin based on last block placed  H->V and V->H are the only ones that need origin moving.
+        cur.rec.x = cur.left.rec.w;
+        cur.rec.y -= cur.left.rec.h;
+        cur.rec.w = cur.left.rec.w;
+        cur.rec.h = cur.left.rec.h;
+      } else if (cur.left.val == 'V' && cur.val == 'H') {
+        cur.rec.x -= cur.left.rec.w;
+        cur.rec.y = cur.left.rec.h;
+        cur.rec.w = cur.left.rec.w;
+        cur.rec.h = cur.left.rec.h;
+      } else {
+        cur.rec.x = cur.left.rec.x;
+        cur.rec.y = cur.left.rec.y;
+        cur.rec.w = cur.left.rec.w;
+        cur.rec.h = cur.left.rec.h;
       }
     }
 
 
     if (cur.right.val == 'V' || cur.right.val == 'H') { //if we are going to the right down to a cut
       if (cur.val == 'V') { //if we are in a vertical cut, shift origin right
-        cur.right.rec.x += cur.rec.x;
+        cur.right.rec = cur.rec;
       } else if (cur.val == 'H') { //if we are in a horizontal cut, shift origin down
-        cur.right.rec.y += cur.rec.y;
-        println("I am", cur.val, " after returning from left and printing", cur.left.val, "my y is ", cur.rec.y);
+        cur.right.rec = cur.rec;
       }
     }
     recursiverects(cur.right); // RIGHT
-    
     if (cur.right.val != 'V' && cur.right.val != 'H') {  //RIGHT LEAF
       if (cur.val == 'V') { //we have a vertical cut, to stack the value just returned from at the base location of the V cut position (cut.rec. is this)
         printcurright(cur);
 
         cur.rec.x += cur.right.rec.w;
+        cur.rec.w = cur.right.rec.w + cur.left.rec.w;
         if (cur.rec.h < cur.right.rec.h) cur.rec.h = cur.right.rec.h; // choose largest height
       } else if (cur.val == 'H') {// horizontal cut, but the left would have already shifted the current positional value after it ran
         printcurright(cur);
 
         cur.rec.y += cur.right.rec.h;
-        println("I am", cur.val, " after returning from right and printing", cur.right.val, "my y is ", cur.rec.y);
+        cur.rec.h = cur.right.rec.h + cur.left.rec.h;
         if (cur.rec.w < cur.right.rec.w) cur.rec.w = cur.right.rec.w; // choose largest width.
       }
     } else {// RIGHT CUT
-      if (cur.val == 'V') {
-        cur.rec.x += cur.right.rec.x;
-      } else if (cur.val == 'H') {
-        cur.rec.y += cur.right.rec.y;
+      if (cur.right.val == 'H' && cur.val == 'V') { //if cut shift origin based on last block placed  H->V and V->H are the only ones that need origin moving.
+        cur.rec.x += cur.right.rec.w;
+        if (cur.rec.h < cur.right.rec.h) cur.rec.h = cur.right.rec.h; // choose largest height
+      } else if (cur.right.val == 'V' && cur.val == 'H') {
+        cur.rec.y += cur.right.rec.h;
+        if (cur.rec.w < cur.right.rec.w) cur.rec.w = cur.right.rec.w; // choose largest width.
+      } else {
+        cur.rec.x = cur.right.rec.x;
+        cur.rec.y = cur.right.rec.y;
       }
     }
     return;
@@ -252,7 +275,7 @@ void printcurleft(Node cur) {
 }
 
 void printcurright(Node cur) {
-  fill(random(1, 255), random(1, 255), random(1, 255)); 
+  fill(random(100, 255), random(100, 255), random(100, 255)); 
   rect(cur.rec.x+playarea_x, cur.rec.y+playarea_y, cur.right.rec.w, cur.right.rec.h);
   fill(0); 
   textAlign(CENTER, CENTER);
