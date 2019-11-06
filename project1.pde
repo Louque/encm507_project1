@@ -4,7 +4,7 @@
 ///
 import java.util.ArrayDeque;
 
-String s = "12H34V5HH"; //MUST be a valid polish expresion THIS IS THE CURRENT USER INPUT, update with better way later.
+String s = "12H534VHV"; //MUST be a valid polish expresion THIS IS THE CURRENT USER INPUT, update with better way later.
 int scalingvariable = 20; //ROBERT's favorite variable.H34VH
 int textsize = 15;
 char[] polish;
@@ -209,13 +209,13 @@ public class Tree { // these are the tree nodes for the polish expression
       //need to update the size of the cut node's dimensions for using in other levels.
     } else {  // LEFT CUT
       if (cur.left.val == 'H' && cur.val == 'V') { //if cut shift origin based on last block placed  H->V and V->H are the only ones that need origin moving.
-        cur.rec.x = cur.left.rec.w;
+        cur.rec.x += cur.left.rec.w; //just changed to +=
         cur.rec.y -= cur.left.rec.h;
         cur.rec.w = cur.left.rec.w;
         cur.rec.h = cur.left.rec.h;
       } else if (cur.left.val == 'V' && cur.val == 'H') {
         cur.rec.x -= cur.left.rec.w;
-        cur.rec.y = cur.left.rec.h;
+        cur.rec.y += cur.left.rec.h;//just changed to +=
         cur.rec.w = cur.left.rec.w;
         cur.rec.h = cur.left.rec.h;
       } else {
