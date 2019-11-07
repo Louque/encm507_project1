@@ -73,6 +73,11 @@ public String swap(String s, int i, int j) {
     return s;
   }// this DOESN'T swap if it's a letter because this make the polish expression
 
+  rect_class temp = globalrects[i]; // this is for makeing sure that sizes are kept while moving the rects
+  globalrects[i] = globalrects[j];
+  globalrects[j] = temp; //TODO
+  print("\nglobalrectsi and j" + globalrects[i].id, globalrects[j].id);
+
   print("\n this is i and j" + i, j);
   if (i<j) {
     String s1 = s.substring(0, i); //take start of string to first click

@@ -1,5 +1,5 @@
 void printcurleft(Node cur) {
-  fill(100, 200, 0); 
+  fill(255, 255, 255); 
   if (cur.rec.x + cur.left.rec.w > costx) costx = cur.rec.x + cur.left.rec.w;
   if (cur.rec.y + cur.left.rec.h > costy) costy = cur.rec.y + cur.left.rec.h;
 
@@ -16,7 +16,7 @@ void printcurleft(Node cur) {
 }
 
 void printcurright(Node cur) {
-  fill(200, 100, 0);
+  fill(255, 255, 255);
   if (cur.rec.x + cur.right.rec.w > costx) costx = cur.rec.x + cur.right.rec.w;
   if (cur.rec.y + cur.right.rec.h > costy) costy = cur.rec.y + cur.right.rec.h;
   rect(cur.rec.x+playarea_x, cur.rec.y+playarea_y, cur.right.rec.w, cur.right.rec.h);
@@ -47,8 +47,10 @@ void printprintstack(colour c){
 
 void reprintpolishafterchange() { // this is used to print result to the screen and refresh costs
   reprintflag = true; // this sets up the add function to keep the sizes from the last tree
-  newtree.add(result.toCharArray()); //calls this with printstack set to true. Which now keeps sizes from last tree
-  newtree.setsizesxy(1, 2); //TODO change these to pull from a constant location?
+  newtree.add(result.toCharArray()); //calls this with printstack set to true. Which now keeps sizes from last tree 
+  //newtree.setsizesxy(1,2); // this is needed right now
+  newtree.setsizesglobalrects(); //TODO change these to pull from a constant location? 
+  
   printstack.clear();
   costx = costy =0; // need to reset the cost calcs everytime we make a new rect
   newtree.recursiverects(newtree.head);

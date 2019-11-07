@@ -34,15 +34,16 @@ public class Tree { // these are the tree nodes for the polish expression
     polish = stack; //stack and polish will have same tree after this
   }
 
-  void setsizesrandom() {
+  void setsizesrandom() { //initially sets sizes to random for each non cut node
     stack.clear();
     recursive(head);
+    globalid = 0;
     while (!stack.isEmpty()) {
       Node tempnode = (Node) stack.pop();
       if (tempnode.val != 'V' && tempnode.val != 'H') { //only add dimensions to non-cut nodes for now. Node sizes will be based on children and calcuated later
-        tempnode.rec =  new rect_class(globalid, 0, 0, (int) random(1, 4)*scalingvariable, (int) random(1, 4)*scalingvariable);
+        globalrects[globalid] = new rect_class(globalid, 0, 0, (int) random(1, 4)*scalingvariable, (int) random(1, 4)*scalingvariable);
         globalid++;
-        globalrects[globalid] = tempnode.rec;
+        
         //tempnode.rec =  new rect_class(1, 0, 0, 1*scalingvariable, 1*scalingvariable);
       } else {
         tempnode.rec =  new rect_class(1, 0, 0, 0, 0);
@@ -51,13 +52,29 @@ public class Tree { // these are the tree nodes for the polish expression
     }
   }
   
-void setsizesxy(int x, int y) {
+void setsizesxy(int x, int y) { //this looks like it's setting the size to sexy based on the name :^)
     stack.clear();
     recursive(head);
     while (!stack.isEmpty()) {
       Node tempnode = (Node) stack.pop();
       if (tempnode.val != 'V' && tempnode.val != 'H') { //only add dimensions to non-cut nodes for now. Node sizes will be based on children and calcuated later
         tempnode.rec =  new rect_class(1, 0, 0, (int) x*scalingvariable, (int) y*scalingvariable);
+      } else {
+        tempnode.rec =  new rect_class(1, 0, 0, 0, 0);
+      }
+      polish.addLast(tempnode); // so polish should be filled with the correct stack now
+    }
+  }
+  
+  void setsizesglobalrects() { //this looks like it's setting the size to sexy based on the name :^)
+    stack.clear();
+    recursive(head);
+    int i = 0;
+    while (!stack.isEmpty()) {
+      Node tempnode = (Node) stack.pop();
+      if (tempnode.val != 'V' && tempnode.val != 'H') { //only add dimensions to non-cut nodes for now. Node sizes will be based on children and calcuated later
+        tempnode.rec =  globalrects[i];
+        i++;
       } else {
         tempnode.rec =  new rect_class(1, 0, 0, 0, 0);
       }
