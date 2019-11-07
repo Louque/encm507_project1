@@ -83,7 +83,7 @@ void draw() { //repeat infinitum
   fill(230, 230, 220);
   rect(playarea_x, playarea_y, playarea_w, playarea_h); //creates play area. playarea_variables will be used as part of placement as well.
 
-  printprintstack(new colour(200, 0, 0));
+  printprintstack(new colour(200, 200,255));
 
 
   fill(0, 0, 0);
